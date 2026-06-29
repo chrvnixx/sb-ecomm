@@ -1,0 +1,28 @@
+package com.e_commerce.project.Controller;
+
+import com.e_commerce.project.Models.Category;
+import com.e_commerce.project.Service.Service.CategoryService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@RestController
+public class CategoryController {
+
+   private CategoryService categoryService;
+
+    @GetMapping("/api/public/categories")
+    public List<Category> getAllCategories(){
+        return categoryService.getAllCategories();
+    }
+
+    @PostMapping("/api/public/categories")
+    public String createCategories(@RequestBody Category category){
+        categoryService.createCategories(category);
+        return "New category added successfully";
+    }
+}
