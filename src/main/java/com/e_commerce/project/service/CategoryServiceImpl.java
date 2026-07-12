@@ -1,14 +1,15 @@
-package com.e_commerce.project.Service;
+package com.e_commerce.project.service;
 
 import com.e_commerce.project.models.Category;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CategoryServiceImpl implements CategoryService  {
+public class CategoryServiceImpl implements CategoryService{
 
     private List<Category> categories = new ArrayList<>();
     private Long nextId = 1L;
@@ -19,19 +20,15 @@ public class CategoryServiceImpl implements CategoryService  {
     }
 
     @Override
-    public void createCategories(@RequestBody Category category) {
+    public void createCategory(Category category) {
         category.setCategoryId(nextId++);
         categories.add(category);
     }
 
     @Override
     public String deleteCategory(Long categoryId) {
-        Category category = categories.stream().filter(c->c.getCategoryId().equals(categoryId)).findFirst().orElse(null);
-        if(category == null)
-            return "Category not found";
+        Category category = categories.stream().filter(c-> c.getCategoryId().equals(categoryId)).findFirst().orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
         categories.remove(category);
-        return "Category with categoryId:" + categoryId + " has been deleted!!!";
+        return "Category with category id:" + categoryId + " has been deleted...";
     }
-
-
 }
