@@ -31,24 +31,16 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public String deleteCategory(Long categoryId) {
-        List<Category> categories = categoryRepository.findAll();
-        Category category = categories.stream().filter(c-> c.getCategoryId().equals(categoryId)).findFirst().orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
-        categoryRepository.delete(category);
-        return "Category with categoryId:" + categoryId + " has been deleted...";
+       Category existingCategory = categoryRepository.findById(categoryId).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Category not found"));
+       categoryRepository.delete(existingCategory);
+       return "Category deleted";
     }
 
     @Override
     public Category updateCategory(Category category, Long categoryId) {
-        List<Category> categories = categoryRepository.findAll();
-        Optional<Category> optionalCategory = categories.stream().filter(c-> c.getCategoryId().equals(categoryId)).findFirst();
-        if(optionalCategory.isPresent()){
-            Category existingCategory = optionalCategory.get();
-             existingCategory.setCategoryName(category.getCategoryName());
-             Category savedCategory = categoryRepository.save(existingCategory);
-             return savedCategory;
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found");
-        }
+      Category existingCategory = categoryRepository.findById(categoryId).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+      existingCategory.setCategoryName(category.getCategoryName());
+      return categoryRepository.save(existingCategory);
 
     }
 }
